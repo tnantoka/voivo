@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../providers.dart';
+import 'audio_form.dart';
 
 class Home extends HookConsumerWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,13 +13,16 @@ class Home extends HookConsumerWidget {
     final initialize = ref.watch(initializeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Example')),
+      appBar: AppBar(
+        title: const Text('Voivo'),
+      ),
       body: initialize.when(
-        data: (_) {},
+        data: (_) => const AudioForm(),
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
         error: (err, stack) {
+          print(err);
           WidgetsBinding.instance?.addPostFrameCallback((_) {
             _showErrorDialog(context);
           });

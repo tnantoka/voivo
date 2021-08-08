@@ -14,12 +14,14 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  audiofileplayer:
   dio:
   flutter_dotenv:
   flutter_hooks:
   hooks_riverpod: ^1.0.0-dev.6
   openapi:
     path: openapi
+  path_provider:
 
 dev_dependencies:
   flutter_test:

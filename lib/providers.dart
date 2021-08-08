@@ -8,12 +8,18 @@ final defaultApiProvider = StateProvider<DefaultApi>(
 final versionProvider = StateProvider<String>(
   (ref) => '',
 );
+final speakerProvider = StateProvider<int>(
+  (ref) => 0,
+);
 
 final initializeProvider = FutureProvider<void>((ref) async {
   await dotenv.load(fileName: '.env');
 
-  final defaultApi =
-      Openapi(basePathOverride: dotenv.env['API_BASE_PATH']).getDefaultApi();
+  final dio = Openapi().dio;
+  dio.options.connectTimeout = 30000;
+  dio.options.baseUrl = dotenv.env['API_BASE_PATH'] ?? '';
+
+  final defaultApi = Openapi(dio: dio).getDefaultApi();
   final version = await defaultApi.versionVersionGet();
 
   ref.read(defaultApiProvider).state = defaultApi;
