@@ -16,6 +16,8 @@ dependencies:
 
   dio:
   flutter_dotenv:
+  flutter_hooks:
+  hooks_riverpod: ^1.0.0-dev.6
   openapi:
     path: openapi
 

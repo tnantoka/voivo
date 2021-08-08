@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:openapi/openapi.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+import '../providers.dart';
 
-  final String title;
-
+class Home extends HookConsumerWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final initialize = ref.watch(initializeProvider);
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    return Scaffold(
+      appBar: AppBar(title: Text('Example')),
+      body: initialize.when(
+        data: (_) {},
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        error: (err, stack) {
+          WidgetsBinding.instance?.addPostFrameCallback((_) {
+            _showErrorDialog(context);
+          });
+        },
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+  _showErrorDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('エラー'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const [
+                const Text('初期化に失敗しました.'),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+        );
+      },
     );
   }
 }

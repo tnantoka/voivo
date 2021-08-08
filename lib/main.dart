@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:openapi/openapi.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'widgets/home.dart';
 
-void main() async {
-  await dotenv.load(fileName: '.env');
-
-  final api =
-      Openapi(basePathOverride: dotenv.env['API_BASE_PATH']).getDefaultApi();
-  final response = await api.versionVersionGet();
-  print(response);
-
-  runApp(MyApp());
+void main() {
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Home(),
     );
   }
 }
