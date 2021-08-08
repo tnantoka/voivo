@@ -5,12 +5,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../providers.dart';
 
 class Home extends HookConsumerWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final initialize = ref.watch(initializeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Example')),
+      appBar: AppBar(title: const Text('Example')),
       body: initialize.when(
         data: (_) {},
         loading: () => const Center(
@@ -34,7 +36,7 @@ class Home extends HookConsumerWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: const [
-                const Text('初期化に失敗しました.'),
+                Text('初期化に失敗しました.'),
               ],
             ),
           ),
