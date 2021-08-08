@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**moras** | [**List<Mora>**](Mora.md) |  | [default to const []]
+**moras** | [**BuiltList&lt;Mora&gt;**](Mora.md) |  | 
 **accent** | **int** |  | 
 **pauseMora** | [**Mora**](Mora.md) |  | [optional] 
 

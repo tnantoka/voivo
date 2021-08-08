@@ -1,21 +1,13 @@
-//
-// AUTO-GENERATED FILE, DO NOT MODIFY!
-//
-// @dart=2.0
-
-// ignore_for_file: unused_element, unused_import
-// ignore_for_file: always_put_required_named_parameters_first
-// ignore_for_file: lines_longer_than_80_chars
-
-import 'package:openapi/api.dart';
 import 'package:test/test.dart';
+import 'package:openapi/openapi.dart';
 
 // tests for ValidationError
 void main() {
-  final instance = ValidationError();
+  final instance = ValidationErrorBuilder();
+  // TODO add properties to the builder and call build()
 
-  group('test ValidationError', () {
-    // List<String> loc (default value: const [])
+  group(ValidationError, () {
+    // BuiltList<String> loc
     test('to test the property `loc`', () async {
       // TODO
     });
@@ -30,7 +22,5 @@ void main() {
       // TODO
     });
 
-
   });
-
 }

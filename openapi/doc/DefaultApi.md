@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **accentPhrasesAccentPhrasesPost**
-> List<AccentPhrase> accentPhrasesAccentPhrasesPost(text, speaker)
+> BuiltList<AccentPhrase> accentPhrasesAccentPhrasesPost(text, speaker)
 
 Accent Phrases
 
@@ -25,14 +25,14 @@ Accent Phrases
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = DefaultApi();
-final text = text_example; // String | 
-final speaker = 56; // int | 
+final api = Openapi().getDefaultApi();
+final String text = text_example; // String | 
+final int speaker = 56; // int | 
 
 try { 
-    final result = api_instance.accentPhrasesAccentPhrasesPost(text, speaker);
-    print(result);
-} catch (e) {
+    final response = api.accentPhrasesAccentPhrasesPost(text, speaker);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DefaultApi->accentPhrasesAccentPhrasesPost: $e\n');
 }
 ```
@@ -46,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<AccentPhrase>**](AccentPhrase.md)
+[**BuiltList&lt;AccentPhrase&gt;**](AccentPhrase.md)
 
 ### Authorization
 
@@ -68,14 +68,14 @@ Audio Query
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = DefaultApi();
-final text = text_example; // String | 
-final speaker = 56; // int | 
+final api = Openapi().getDefaultApi();
+final String text = text_example; // String | 
+final int speaker = 56; // int | 
 
 try { 
-    final result = api_instance.audioQueryAudioQueryPost(text, speaker);
-    print(result);
-} catch (e) {
+    final response = api.audioQueryAudioQueryPost(text, speaker);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DefaultApi->audioQueryAudioQueryPost: $e\n');
 }
 ```
@@ -103,7 +103,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **moraPitchMoraPitchPost**
-> List<AccentPhrase> moraPitchMoraPitchPost(speaker, accentPhrase)
+> BuiltList<AccentPhrase> moraPitchMoraPitchPost(speaker, accentPhrase)
 
 Mora Pitch
 
@@ -111,14 +111,14 @@ Mora Pitch
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = DefaultApi();
-final speaker = 56; // int | 
-final accentPhrase = [List<AccentPhrase>()]; // List<AccentPhrase> | 
+final api = Openapi().getDefaultApi();
+final int speaker = 56; // int | 
+final BuiltList<AccentPhrase> accentPhrase = ; // BuiltList<AccentPhrase> | 
 
 try { 
-    final result = api_instance.moraPitchMoraPitchPost(speaker, accentPhrase);
-    print(result);
-} catch (e) {
+    final response = api.moraPitchMoraPitchPost(speaker, accentPhrase);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DefaultApi->moraPitchMoraPitchPost: $e\n');
 }
 ```
@@ -128,11 +128,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **speaker** | **int**|  | 
- **accentPhrase** | [**List<AccentPhrase>**](AccentPhrase.md)|  | 
+ **accentPhrase** | [**BuiltList&lt;AccentPhrase&gt;**](AccentPhrase.md)|  | 
 
 ### Return type
 
-[**List<AccentPhrase>**](AccentPhrase.md)
+[**BuiltList&lt;AccentPhrase&gt;**](AccentPhrase.md)
 
 ### Authorization
 
@@ -146,7 +146,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **synthesisSynthesisPost**
-> MultipartFile synthesisSynthesisPost(speaker, audioQuery)
+> Uint8List synthesisSynthesisPost(speaker, audioQuery)
 
 Synthesis
 
@@ -154,14 +154,14 @@ Synthesis
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = DefaultApi();
-final speaker = 56; // int | 
-final audioQuery = AudioQuery(); // AudioQuery | 
+final api = Openapi().getDefaultApi();
+final int speaker = 56; // int | 
+final AudioQuery audioQuery = ; // AudioQuery | 
 
 try { 
-    final result = api_instance.synthesisSynthesisPost(speaker, audioQuery);
-    print(result);
-} catch (e) {
+    final response = api.synthesisSynthesisPost(speaker, audioQuery);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DefaultApi->synthesisSynthesisPost: $e\n');
 }
 ```
@@ -175,7 +175,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MultipartFile**](MultipartFile.md)
+[**Uint8List**](Uint8List.md)
 
 ### Authorization
 
@@ -189,7 +189,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **versionVersionGet**
-> Object versionVersionGet()
+> JsonObject versionVersionGet()
 
 Version
 
@@ -197,12 +197,12 @@ Version
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = DefaultApi();
+final api = Openapi().getDefaultApi();
 
 try { 
-    final result = api_instance.versionVersionGet();
-    print(result);
-} catch (e) {
+    final response = api.versionVersionGet();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DefaultApi->versionVersionGet: $e\n');
 }
 ```
@@ -212,7 +212,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**Object**](Object.md)
+[**JsonObject**](JsonObject.md)
 
 ### Authorization
 

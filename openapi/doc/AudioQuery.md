@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**accentPhrases** | [**List<AccentPhrase>**](AccentPhrase.md) |  | [default to const []]
+**accentPhrases** | [**BuiltList&lt;AccentPhrase&gt;**](AccentPhrase.md) |  | 
 **speedScale** | **num** |  | 
 **pitchScale** | **num** |  | 
 **intonationScale** | **num** |  | 

@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**loc** | **List<String>** |  | [default to const []]
+**loc** | **BuiltList&lt;String&gt;** |  | 
 **msg** | **String** |  | 
 **type** | **String** |  | 
 
