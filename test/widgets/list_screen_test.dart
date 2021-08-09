@@ -25,5 +25,10 @@ void main() {
     await tester.drag(find.text('こんにちは'), const Offset(1000, 0));
     await tester.pumpAndSettle();
     expect(find.text('こんにちは'), findsNothing);
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pump();
+
+    expect(find.byType(ListTile), findsNWidgets(2));
   });
 }

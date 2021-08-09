@@ -27,7 +27,7 @@ class EditorScreen extends HookConsumerWidget {
 
     useEffect(() {
       listener() async {
-        if (textFocusNode.hasFocus) {
+        if (textFocusNode.hasFocus || audioItem.text.isEmpty) {
           return;
         }
 
