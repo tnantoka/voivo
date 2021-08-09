@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
+import 'package:voivo/models/audio_item.dart';
 import 'package:voivo/widgets/audio_accent_form.dart';
 import 'package:voivo/widgets/audio_general_form.dart';
 import 'package:voivo/widgets/audio_intonation_form.dart';
 
 import '../providers.dart';
+
+final placeholder = AudioItem(text: '');
 
 final _selectedTabIndexProvider = StateProvider<int>(
   (ref) => 0,
@@ -24,7 +27,9 @@ class EditorScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(selectedAudioIdProvider);
     final items = ref.watch(audioItemListProvider);
-    final audioItem = items.firstWhere((item) => item.id == id);
+
+    final audioItem =
+        items.firstWhere((item) => item.id == id, orElse: () => placeholder);
 
     final selectedTabIndex = ref.watch(_selectedTabIndexProvider).state;
     final isPlaying = ref.watch(_isPlayingProvider).state;
@@ -73,7 +78,36 @@ class EditorScreen extends HookConsumerWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: [
+            PopupMenuButton<String>(
+              initialValue: '',
+              icon: const Icon(Icons.more_vert),
+              onSelected: (value) {
+                switch (value) {
+                  case 'export':
+                    break;
+                  case 'delete':
+                    Navigator.pop(context);
+                    ref
+                        .read(audioItemListProvider.notifier)
+                        .delete(audioItem.id);
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem(
+                  child: Text('エクスポート'),
+                  value: 'export',
+                ),
+                const PopupMenuItem(
+                  child: Text('削除'),
+                  value: 'delete',
+                ),
+              ],
+            ),
+          ],
+        ),
         backgroundColor: Colors.white,
         body: Column(children: [
           Visibility(

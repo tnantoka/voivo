@@ -48,7 +48,7 @@ class HomeScreen extends HookConsumerWidget {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
           ],
