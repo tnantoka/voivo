@@ -3,31 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../providers.dart';
-import 'audio_form.dart';
+import 'list_screen.dart';
 
-class Home extends HookConsumerWidget {
-  const Home({Key? key}) : super(key: key);
+class HomeScreen extends HookConsumerWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final initialize = ref.watch(initializeProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Voivo'),
-      ),
-      body: initialize.when(
-        data: (_) => const AudioForm(),
-        loading: () => const Center(
+    return initialize.when(
+      data: (_) => const ListScreen(),
+      loading: () => Scaffold(
+        appBar: AppBar(
+          title: const Text('Voivo'),
+        ),
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
-        error: (err, stack) {
-          print(err);
-          WidgetsBinding.instance?.addPostFrameCallback((_) {
-            _showErrorDialog(context);
-          });
-        },
       ),
+      error: (err, stack) {
+        print(err);
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          _showErrorDialog(context);
+        });
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Voivo'),
+          ),
+        );
+      },
     );
   }
 

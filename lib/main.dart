@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'widgets/home.dart';
+import 'providers.dart';
+import 'widgets/home_screen.dart';
+import 'widgets/editor_screen.dart';
 
 void main() {
   runApp(
@@ -21,7 +23,29 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: const HomeScreen(),
+      onGenerateRoute: (settings) {
+        if (settings.name == null) {
+          return null;
+        }
+
+        final components = settings.name!.split('/');
+        Widget? result;
+        if (settings.name!.startsWith('/edit/') && components.length == 3) {
+          result = ProviderScope(
+            overrides: [
+              selectedAudioIdProvider.overrideWithValue(components.last),
+            ],
+            child: const EditorScreen(),
+          );
+        }
+
+        if (result == null) {
+          return null;
+        }
+
+        return MaterialPageRoute<void>(builder: (context) => result!);
+      },
     );
   }
 }
