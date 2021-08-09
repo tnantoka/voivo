@@ -1,5 +1,4 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:openapi/openapi.dart';
 
 import 'models/audio_item.dart';

@@ -49,6 +49,8 @@ class AudioItemList extends StateNotifier<List<AudioItem>> {
     }).toList();
   }
 
+  void updateAccent(String id, int index, int accent) {}
+
   void delete(String id) async {
     state = state.where((item) => item.id != id).toList();
   }
