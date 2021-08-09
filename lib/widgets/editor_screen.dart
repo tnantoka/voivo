@@ -7,6 +7,7 @@ import 'package:voivo/models/audio_item.dart';
 import 'package:voivo/widgets/audio_accent_form.dart';
 import 'package:voivo/widgets/audio_general_form.dart';
 import 'package:voivo/widgets/audio_intonation_form.dart';
+import 'package:share/share.dart';
 
 import '../providers.dart';
 
@@ -86,6 +87,7 @@ class EditorScreen extends HookConsumerWidget {
               onSelected: (value) {
                 switch (value) {
                   case 'export':
+                    Share.shareFiles([audioItem.generatedPath!]);
                     break;
                   case 'delete':
                     Navigator.pop(context);
@@ -96,10 +98,11 @@ class EditorScreen extends HookConsumerWidget {
                 }
               },
               itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  child: Text('エクスポート'),
-                  value: 'export',
-                ),
+                if (audioItem.generatedPath?.isNotEmpty ?? false)
+                  const PopupMenuItem(
+                    child: Text('エクスポート'),
+                    value: 'export',
+                  ),
                 const PopupMenuItem(
                   child: Text('削除'),
                   value: 'delete',

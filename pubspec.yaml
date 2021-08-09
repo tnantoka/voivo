@@ -23,6 +23,7 @@ dependencies:
     path: openapi
   path_provider:
   uuid:
+  share:
 
 dev_dependencies:
   flutter_test:
