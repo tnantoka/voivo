@@ -31,7 +31,14 @@ class AudioGeneralForm extends HookConsumerWidget {
                 items: [0, 1].map((speaker) {
                   return DropdownMenuItem(
                     value: speaker,
-                    child: Text('スピーカー $speaker'),
+                    child: Row(children: [
+                      CircleAvatar(
+                        child: Text('S${speaker}'),
+                        radius: 14,
+                      ),
+                      SizedBox(width: 4),
+                      Text('スピーカー $speaker'),
+                    ]),
                   );
                 }).toList(),
               ),
