@@ -21,6 +21,8 @@ void main() {
             ),
             initializeApiProvider.overrideWithProvider(
                 (value) => Provider((ref) => const AsyncValue.data(null))),
+            hostProvider
+                .overrideWithValue(StateController('http://example.com')),
             selectedAudioIdProvider.overrideWithValue('id-0'),
           ],
           child: const EditorScreen(),

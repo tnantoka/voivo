@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../providers.dart';
+import '../utils.dart';
 import 'list_screen.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -13,6 +15,7 @@ class HomeScreen extends HookConsumerWidget {
     final host = ref.watch(hostProvider).state;
 
     final initializeApi = ref.watch(initializeApiProvider(host));
+    final textController = useTextEditingController(text: apiBase(host));
 
     return initializeApi.when(
       data: (_) => const ListScreen(),
@@ -33,6 +36,27 @@ class HomeScreen extends HookConsumerWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Voivo'),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: textController,
+                  autofocus: true,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ref.read(hostProvider).state = textController.value.text;
+                    },
+                    child: const Text('接続'),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

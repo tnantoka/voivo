@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../providers.dart';
+import '../utils.dart';
 
 class ListScreen extends HookConsumerWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -17,8 +17,7 @@ class ListScreen extends HookConsumerWidget {
     final host = ref.watch(hostProvider).state;
 
     final scrollController = useScrollController();
-    final hostController = useTextEditingController(
-        text: host.isEmpty ? dotenv.env['API_BASE_PATH'] ?? '' : host);
+    final hostController = useTextEditingController(text: apiBase(host));
 
     return Scaffold(
       appBar: AppBar(
@@ -34,9 +33,7 @@ class ListScreen extends HookConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(host.isEmpty
-                        ? dotenv.env['API_BASE_PATH'] ?? ''
-                        : host),
+                    Text(apiBase(host)),
                     Text(version),
                   ],
                 ),
@@ -130,7 +127,7 @@ class ListScreen extends HookConsumerWidget {
                 onPressed: () {
                   Navigator.pop(context);
                   // FIXME: A TextEditingController was used after being disposed.
-                  Future.delayed(new Duration(milliseconds: 300)).then((_) {
+                  Future.delayed(const Duration(milliseconds: 300)).then((_) {
                     ref.read(hostProvider).state = textController.value.text;
                   });
                   // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

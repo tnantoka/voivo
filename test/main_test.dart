@@ -14,6 +14,8 @@ void main() {
           overrides: [
             initializeApiProvider.overrideWithProvider(
                 (value) => Provider((ref) => const AsyncValue.loading())),
+            hostProvider
+                .overrideWithValue(StateController('http://example.com')),
           ],
           child: const App(),
         ),
