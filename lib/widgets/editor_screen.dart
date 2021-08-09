@@ -11,6 +11,10 @@ import 'package:path_provider/path_provider.dart';
 
 import '../providers.dart';
 
+final _selectedTabIndexProvider = StateProvider<int>(
+  (ref) => 0,
+);
+
 class EditorScreen extends HookConsumerWidget {
   const EditorScreen({Key? key}) : super(key: key);
 
@@ -19,6 +23,8 @@ class EditorScreen extends HookConsumerWidget {
     final id = ref.watch(selectedAudioIdProvider);
     final items = ref.watch(audioItemListProvider);
     final audioItem = items.firstWhere((item) => item.id == id);
+
+    final selectedTabIndex = ref.watch(_selectedTabIndexProvider).state;
 
     final textController = useTextEditingController(text: audioItem.text);
     final textFocusNode = useFocusNode();
@@ -46,7 +52,6 @@ class EditorScreen extends HookConsumerWidget {
 
     final onPlay = useCallback(() async {
       if (audioItem.generatedPath != null) {
-        print('using cache');
         Audio.loadFromAbsolutePath(audioItem.generatedPath!).play();
         return;
       }
@@ -63,7 +68,6 @@ class EditorScreen extends HookConsumerWidget {
 
       final path =
           '${(await getApplicationDocumentsDirectory()).path}/${audioItem.id}.wav';
-      print(path);
       await File(path).writeAsBytes(res.data!);
 
       ref
@@ -85,6 +89,7 @@ class EditorScreen extends HookConsumerWidget {
           padding: const EdgeInsets.all(16),
           color: Colors.white,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
                 controller: textController,
@@ -92,13 +97,44 @@ class EditorScreen extends HookConsumerWidget {
                 onChanged: onChangeText,
                 autofocus: audioItem.accentPhrases == null,
               ),
-              SizedBox(
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: audioItem.accentPhrases == null ? null : onPlay,
                   child: const Text('再生'),
                 ),
-              )
+              ),
+              ToggleButtons(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const Text('設定'),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const Text('アクセント'),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const Text('イントネーション'),
+                  ),
+                ],
+                onPressed: (int index) {
+                  ref.read(_selectedTabIndexProvider).state = index;
+                },
+                isSelected:
+                    [0, 1, 2].map((i) => i == selectedTabIndex).toList(),
+              ),
+              if (selectedTabIndex == 0)
+                Container(
+                  color: Colors.red,
+                  height: 10,
+                ),
+              if (selectedTabIndex == 1)
+                Container(color: Colors.green, height: 10),
+              if (selectedTabIndex == 2)
+                Container(color: Colors.blue, height: 10),
             ],
           ),
         ),

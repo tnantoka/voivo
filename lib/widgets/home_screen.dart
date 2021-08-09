@@ -23,7 +23,8 @@ class HomeScreen extends HookConsumerWidget {
         ),
       ),
       error: (err, stack) {
-        print(err);
+        print(err); // ignore: avoid_print
+
         WidgetsBinding.instance?.addPostFrameCallback((_) {
           _showErrorDialog(context);
         });
