@@ -28,7 +28,7 @@ final initializeProvider = FutureProvider<void>((ref) async {
   await dotenv.load(fileName: '.env');
 
   final dio = Openapi().dio;
-  dio.options.connectTimeout = 30000;
+  dio.options.connectTimeout = 60000;
   dio.options.baseUrl = dotenv.env['API_BASE_PATH'] ?? '';
 
   final defaultApi = Openapi(dio: dio).getDefaultApi();

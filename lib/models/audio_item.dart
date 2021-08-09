@@ -62,7 +62,6 @@ class AudioItem {
       builder.intonationScale = intonationScale;
       builder.pitchScale = pitchScale;
       builder.speedScale = speedScale;
-      builder.speedScale = speedScale;
     });
   }
 

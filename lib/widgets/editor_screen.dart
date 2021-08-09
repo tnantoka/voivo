@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
+import 'package:voivo/widgets/audio_accent_form.dart';
+import 'package:voivo/widgets/audio_general_form.dart';
+import 'package:voivo/widgets/audio_intonation_form.dart';
 
 import '../providers.dart';
 
@@ -71,6 +74,7 @@ class EditorScreen extends HookConsumerWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(),
+        backgroundColor: Colors.white,
         body: Column(children: [
           Visibility(
             child: const LinearProgressIndicator(),
@@ -123,14 +127,11 @@ class EditorScreen extends HookConsumerWidget {
                       [0, 1, 2].map((i) => i == selectedTabIndex).toList(),
                 ),
                 if (selectedTabIndex == 0)
-                  Container(
-                    color: Colors.red,
-                    height: 10,
-                  ),
+                  AudioGeneralForm(audioItem: audioItem),
                 if (selectedTabIndex == 1)
-                  Container(color: Colors.green, height: 10),
+                  AudioAccentForm(audioItem: audioItem),
                 if (selectedTabIndex == 2)
-                  Container(color: Colors.blue, height: 10),
+                  AudioIntonationForm(audioItem: audioItem),
               ],
             ),
           ),

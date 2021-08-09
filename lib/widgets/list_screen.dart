@@ -31,7 +31,7 @@ class ListScreen extends HookConsumerWidget {
             },
             child: ListTile(
               leading: CircleAvatar(
-                child: Text(item.speaker.toString()),
+                child: Text('S${item.speaker}'),
               ),
               title: Text(item.text),
               onTap: () {
