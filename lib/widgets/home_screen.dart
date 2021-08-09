@@ -43,14 +43,8 @@ class HomeScreen extends HookConsumerWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('エラー'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const [
-                Text('初期化に失敗しました.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
+          content: const Text('初期化に失敗しました.'),
+          actions: [
             TextButton(
               child: const Text('OK'),
               onPressed: () {

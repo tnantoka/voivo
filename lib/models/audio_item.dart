@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:openapi/openapi.dart';
 import 'package:uuid/uuid.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:path_provider/path_provider.dart';
 
 const _uuid = Uuid();
 
@@ -51,4 +55,28 @@ class AudioItem {
         createdAt: createdAt,
         updatedAt: DateTime.now().toUtc(),
       );
+
+  AudioQuery _buildQuery() {
+    return AudioQuery((builder) {
+      builder.accentPhrases = ListBuilder(accentPhrases!);
+      builder.intonationScale = intonationScale;
+      builder.pitchScale = pitchScale;
+      builder.speedScale = speedScale;
+      builder.speedScale = speedScale;
+    });
+  }
+
+  play(DefaultApi api) async {
+    if (generatedPath != null) {
+      return generatedPath;
+    }
+
+    final res = await api.synthesisSynthesisPost(
+        speaker: speaker, audioQuery: _buildQuery());
+
+    final path = '${(await getApplicationDocumentsDirectory()).path}/$id.wav';
+    await File(path).writeAsBytes(res.data!);
+
+    return path;
+  }
 }
