@@ -6,13 +6,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voivo/widgets/list_screen.dart';
 import 'package:voivo/providers.dart';
 
-void main() {
+void main() async {
   testWidgets('ListScreen', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: ProviderScope(
           overrides: [
-            initializeProvider.overrideWithValue(const AsyncValue.data(null)),
+            initializeApiProvider.overrideWithProvider(
+                (value) => Provider((ref) => const AsyncValue.data(null))),
+            hostProvider
+                .overrideWithValue(StateController('http://example.com')),
           ],
           child: const ListScreen(),
         ),

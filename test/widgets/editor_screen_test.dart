@@ -19,7 +19,8 @@ void main() {
                 AudioItem(id: 'id-0', text: 'テストです'),
               ]),
             ),
-            initializeProvider.overrideWithValue(const AsyncValue.data(null)),
+            initializeApiProvider.overrideWithProvider(
+                (value) => Provider((ref) => const AsyncValue.data(null))),
             selectedAudioIdProvider.overrideWithValue('id-0'),
           ],
           child: const EditorScreen(),

@@ -10,9 +10,11 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialize = ref.watch(initializeProvider);
+    final host = ref.watch(hostProvider).state;
 
-    return initialize.when(
+    final initializeApi = ref.watch(initializeApiProvider(host));
+
+    return initializeApi.when(
       data: (_) => const ListScreen(),
       loading: () => Scaffold(
         appBar: AppBar(

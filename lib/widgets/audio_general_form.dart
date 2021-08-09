@@ -33,10 +33,10 @@ class AudioGeneralForm extends HookConsumerWidget {
                     value: speaker,
                     child: Row(children: [
                       CircleAvatar(
-                        child: Text('S${speaker}'),
+                        child: Text('S$speaker'),
                         radius: 14,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text('スピーカー $speaker'),
                     ]),
                   );

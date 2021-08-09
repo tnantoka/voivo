@@ -12,7 +12,8 @@ void main() {
       MaterialApp(
         home: ProviderScope(
           overrides: [
-            initializeProvider.overrideWithValue(const AsyncValue.loading()),
+            initializeApiProvider.overrideWithProvider(
+                (value) => Provider((ref) => const AsyncValue.loading())),
           ],
           child: const App(),
         ),

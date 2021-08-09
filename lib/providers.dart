@@ -11,6 +11,9 @@ final defaultApiProvider = StateProvider<DefaultApi>(
 final versionProvider = StateProvider<String>(
   (ref) => '',
 );
+final hostProvider = StateProvider<String>(
+  (ref) => '',
+);
 
 final audioItemListProvider =
     StateNotifierProvider<AudioItemList, List<AudioItem>>((ref) {
@@ -24,12 +27,11 @@ final selectedAudioIdProvider = Provider<String>((ref) {
   throw UnimplementedError();
 });
 
-final initializeProvider = FutureProvider<void>((ref) async {
-  await dotenv.load(fileName: '.env');
-
+final initializeApiProvider =
+    FutureProvider.family<void, String>((ref, host) async {
   final dio = Openapi().dio;
   dio.options.connectTimeout = 60000;
-  dio.options.baseUrl = dotenv.env['API_BASE_PATH'] ?? '';
+  dio.options.baseUrl = host.isEmpty ? dotenv.env['API_BASE_PATH'] ?? '' : host;
 
   final defaultApi = Openapi(dio: dio).getDefaultApi();
   final version = await defaultApi.versionVersionGet();
