@@ -34,43 +34,61 @@ class AudioAccentForm extends HookConsumerWidget {
                           .map((moraIndex, mora) {
                             return MapEntry(
                               moraIndex,
-                              Column(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Radio<int>(
-                                    value: moraIndex + 1,
-                                    groupValue: accentPhrase.accent,
-                                    onChanged: (nextAccent) async {
-                                      final accentPhrases = [
-                                        ...audioItem.accentPhrases!
-                                      ];
-                                      accentPhrases[accentPhraseIndex] =
-                                          AccentPhrase((builder) {
-                                        builder.moras =
-                                            ListBuilder(accentPhrase.moras);
-                                        if (accentPhrase.pauseMora != null) {
-                                          final pauseMora = MoraBuilder();
-                                          pauseMora
-                                              .replace(accentPhrase.pauseMora!);
-                                          builder.pauseMora = pauseMora;
-                                        }
-                                        builder.accent = nextAccent;
-                                      });
+                                  Column(
+                                    children: [
+                                      Radio<int>(
+                                        value: moraIndex + 1,
+                                        groupValue: accentPhrase.accent,
+                                        onChanged: (nextAccent) async {
+                                          final accentPhrases = [
+                                            ...audioItem.accentPhrases!
+                                          ];
+                                          accentPhrases[accentPhraseIndex] =
+                                              AccentPhrase((builder) {
+                                            builder.moras =
+                                                ListBuilder(accentPhrase.moras);
+                                            if (accentPhrase.pauseMora !=
+                                                null) {
+                                              final pauseMora = MoraBuilder();
+                                              pauseMora.replace(
+                                                  accentPhrase.pauseMora!);
+                                              builder.pauseMora = pauseMora;
+                                            }
+                                            builder.accent = nextAccent;
+                                          });
 
-                                      final nextAccentPhrases =
-                                          await api.moraPitchMoraPitchPost(
-                                              speaker: audioItem.speaker,
-                                              accentPhrase:
-                                                  BuiltList(accentPhrases));
-                                      ref
-                                          .read(audioItemListProvider.notifier)
-                                          .update(
-                                              id: audioItem.id,
-                                              accentPhrases: nextAccentPhrases
-                                                  .data
-                                                  ?.toList());
-                                    },
+                                          final nextAccentPhrases =
+                                              await api.moraPitchMoraPitchPost(
+                                                  speaker: audioItem.speaker,
+                                                  accentPhrase:
+                                                      BuiltList(accentPhrases));
+                                          ref
+                                              .read(audioItemListProvider
+                                                  .notifier)
+                                              .update(
+                                                  id: audioItem.id,
+                                                  accentPhrases:
+                                                      nextAccentPhrases.data
+                                                          ?.toList());
+                                        },
+                                      ),
+                                      Text(mora.text),
+                                    ],
                                   ),
-                                  Text(mora.text),
+                                  if (moraIndex < accentPhrase.moras.length - 1)
+                                    SizedBox(
+                                      width: 4,
+                                      height: 24,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          print('split');
+                                        },
+                                        child: null,
+                                      ),
+                                    ),
                                 ],
                               ),
                             );
@@ -78,10 +96,20 @@ class AudioAccentForm extends HookConsumerWidget {
                           .values
                           .toList(),
                     ),
-                    // TextButton(
-                    //   child: Text('a'),
-                    //   onPressed: () {},
-                    // ),
+                    if (accentPhraseIndex <
+                        (audioItem.accentPhrases ?? []).length - 1)
+                      SizedBox(
+                        width: 40,
+                        child: TextButton(
+                          child: Transform.rotate(
+                            angle: 0.75,
+                            child: const Icon(Icons.close_fullscreen),
+                          ),
+                          onPressed: () {
+                            print('merge');
+                          },
+                        ),
+                      ),
                   ],
                 ),
               );
