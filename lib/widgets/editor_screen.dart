@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
-import 'package:voivo/models/audio_item.dart';
-import 'package:voivo/widgets/audio_accent_form.dart';
-import 'package:voivo/widgets/audio_general_form.dart';
-import 'package:voivo/widgets/audio_intonation_form.dart';
 import 'package:share/share.dart';
 
 import '../providers.dart';
+import '../models/audio_item.dart';
+import '../widgets/audio_accent_form.dart';
+import '../widgets/audio_general_form.dart';
+import '../widgets/audio_intonation_form.dart';
 
 final placeholder = AudioItem(text: '');
 

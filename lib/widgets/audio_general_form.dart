@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voivo/providers.dart';
 
 import '../models/audio_item.dart';
+import '../providers.dart';
 
 class AudioGeneralForm extends HookConsumerWidget {
   const AudioGeneralForm({Key? key, required this.audioItem}) : super(key: key);
