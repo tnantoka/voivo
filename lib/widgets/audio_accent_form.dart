@@ -23,54 +23,68 @@ class AudioAccentForm extends HookConsumerWidget {
         children: (audioItem.accentPhrases ?? [])
             .asMap()
             .map((accentPhraseIndex, accentPhrase) {
-              final width = accentPhrase.moras.length * 40.0;
               return MapEntry(
-                  accentPhraseIndex,
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: width,
-                        child: Slider(
-                          min: 1,
-                          max: accentPhrase.moras.length.toDouble(),
-                          value: accentPhrase.accent.toDouble(),
-                          divisions: accentPhrase.moras.length - 1,
-                          onChanged: (nextAccent) async {
-                            final accentPhrases = [...audioItem.accentPhrases!];
-                            accentPhrases[accentPhraseIndex] =
-                                AccentPhrase((builder) {
-                              builder.moras = ListBuilder(accentPhrase.moras);
-                              if (accentPhrase.pauseMora != null) {
-                                final pauseMora = MoraBuilder();
-                                pauseMora.replace(accentPhrase.pauseMora!);
-                                builder.pauseMora = pauseMora;
-                              }
-                              builder.accent = nextAccent.toInt();
-                            });
+                accentPhraseIndex,
+                Row(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: accentPhrase.moras
+                          .asMap()
+                          .map((moraIndex, mora) {
+                            return MapEntry(
+                              moraIndex,
+                              Column(
+                                children: [
+                                  Radio<int>(
+                                    value: moraIndex + 1,
+                                    groupValue: accentPhrase.accent,
+                                    onChanged: (nextAccent) async {
+                                      final accentPhrases = [
+                                        ...audioItem.accentPhrases!
+                                      ];
+                                      accentPhrases[accentPhraseIndex] =
+                                          AccentPhrase((builder) {
+                                        builder.moras =
+                                            ListBuilder(accentPhrase.moras);
+                                        if (accentPhrase.pauseMora != null) {
+                                          final pauseMora = MoraBuilder();
+                                          pauseMora
+                                              .replace(accentPhrase.pauseMora!);
+                                          builder.pauseMora = pauseMora;
+                                        }
+                                        builder.accent = nextAccent;
+                                      });
 
-                            final nextAccentPhrases =
-                                await api.moraPitchMoraPitchPost(
-                                    speaker: audioItem.speaker,
-                                    accentPhrase: BuiltList(accentPhrases));
-                            ref.read(audioItemListProvider.notifier).update(
-                                id: audioItem.id,
-                                accentPhrases:
-                                    nextAccentPhrases.data?.toList());
-                          },
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        width: width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: accentPhrase.moras.map((mora) {
-                            return Text(mora.text);
-                          }).toList(),
-                        ),
-                      ),
-                    ],
-                  ));
+                                      final nextAccentPhrases =
+                                          await api.moraPitchMoraPitchPost(
+                                              speaker: audioItem.speaker,
+                                              accentPhrase:
+                                                  BuiltList(accentPhrases));
+                                      ref
+                                          .read(audioItemListProvider.notifier)
+                                          .update(
+                                              id: audioItem.id,
+                                              accentPhrases: nextAccentPhrases
+                                                  .data
+                                                  ?.toList());
+                                    },
+                                  ),
+                                  Text(mora.text),
+                                ],
+                              ),
+                            );
+                          })
+                          .values
+                          .toList(),
+                    ),
+                    // TextButton(
+                    //   child: Text('a'),
+                    //   onPressed: () {},
+                    // ),
+                  ],
+                ),
+              );
             })
             .values
             .toList(),
