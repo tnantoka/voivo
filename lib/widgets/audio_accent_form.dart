@@ -80,12 +80,68 @@ class AudioAccentForm extends HookConsumerWidget {
                                   ),
                                   if (moraIndex < accentPhrase.moras.length - 1)
                                     SizedBox(
-                                      width: 4,
+                                      width: 6,
                                       height: 24,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          print('split');
+                                        onPressed: () async {
+                                          final nextAccentPhrase1 =
+                                              AccentPhrase((builder) {
+                                            builder.moras = ListBuilder(
+                                                accentPhrase.moras
+                                                    .sublist(0, moraIndex + 1));
+                                            builder.accent =
+                                                accentPhrase.accent > moraIndex
+                                                    ? moraIndex + 1
+                                                    : accentPhrase.accent;
+                                          });
+
+                                          final nextAccentPhrase2 =
+                                              AccentPhrase((builder) {
+                                            builder.moras = ListBuilder(
+                                                accentPhrase.moras
+                                                    .sublist(moraIndex + 1));
+                                            if (accentPhrase.pauseMora !=
+                                                null) {
+                                              final pauseMora = MoraBuilder();
+                                              pauseMora.replace(
+                                                  accentPhrase.pauseMora!);
+                                              builder.pauseMora = pauseMora;
+                                            }
+                                            builder.accent =
+                                                accentPhrase.accent >
+                                                        moraIndex + 1
+                                                    ? accentPhrase.accent -
+                                                        moraIndex -
+                                                        1
+                                                    : 1;
+                                          });
+
+                                          final accentPhrases = [
+                                            ...audioItem.accentPhrases!
+                                                .sublist(0, accentPhraseIndex),
+                                            nextAccentPhrase1,
+                                            nextAccentPhrase2,
+                                            ...audioItem.accentPhrases!
+                                                .sublist(accentPhraseIndex + 1),
+                                          ];
+
+                                          final nextAccentPhrases =
+                                              await api.moraPitchMoraPitchPost(
+                                                  speaker: audioItem.speaker,
+                                                  accentPhrase:
+                                                      BuiltList(accentPhrases));
+                                          ref
+                                              .read(audioItemListProvider
+                                                  .notifier)
+                                              .update(
+                                                  id: audioItem.id,
+                                                  accentPhrases:
+                                                      nextAccentPhrases.data
+                                                          ?.toList());
                                         },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.grey,
+                                        ),
                                         child: null,
                                       ),
                                     ),
