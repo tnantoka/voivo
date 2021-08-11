@@ -21,7 +21,12 @@ class ListScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voivo'),
+        title: const Text(
+          'Voivo',
+          textScaleFactor: 1.4,
+          style: TextStyle(fontFamily: 'KaushanScript'),
+        ),
+        brightness: Brightness.dark,
       ),
       drawer: Drawer(
         child: ListView(

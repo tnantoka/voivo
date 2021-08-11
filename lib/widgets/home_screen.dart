@@ -21,7 +21,12 @@ class HomeScreen extends HookConsumerWidget {
       data: (_) => const ListScreen(),
       loading: () => Scaffold(
         appBar: AppBar(
-          title: const Text('Voivo'),
+          title: const Text(
+            'Voivo',
+            textScaleFactor: 1.4,
+            style: TextStyle(fontFamily: 'KaushanScript'),
+          ),
+          brightness: Brightness.dark,
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -35,7 +40,12 @@ class HomeScreen extends HookConsumerWidget {
         });
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Voivo'),
+            title: const Text(
+              'Voivo',
+              textScaleFactor: 1.4,
+              style: TextStyle(fontFamily: 'KaushanScript'),
+            ),
+            brightness: Brightness.dark,
           ),
           body: Container(
             padding: const EdgeInsets.all(16),

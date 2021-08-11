@@ -1,7 +1,7 @@
 name: voivo
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -30,6 +30,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons:
   flutter_lints:
 
 flutter:
@@ -38,3 +39,13 @@ flutter:
 
   assets:
     - .env
+
+  fonts:
+     - family: KaushanScript
+       fonts:
+         - asset: fonts/Kaushan_Script/KaushanScript-Regular.ttf
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
