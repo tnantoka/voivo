@@ -161,8 +161,43 @@ class AudioAccentForm extends HookConsumerWidget {
                             angle: 0.75,
                             child: const Icon(Icons.close_fullscreen),
                           ),
-                          onPressed: () {
-                            print('merge');
+                          onPressed: () async {
+                            final nextAccentPhrase = AccentPhrase((builder) {
+                              builder.moras = ListBuilder([
+                                ...accentPhrase.moras,
+                                ...audioItem
+                                    .accentPhrases![accentPhraseIndex + 1]
+                                    .moras,
+                              ]);
+                              if (audioItem
+                                      .accentPhrases![accentPhraseIndex + 1]
+                                      .pauseMora !=
+                                  null) {
+                                final pauseMora = MoraBuilder();
+                                pauseMora.replace(audioItem
+                                    .accentPhrases![accentPhraseIndex + 1]
+                                    .pauseMora!);
+                                builder.pauseMora = pauseMora;
+                              }
+                              builder.accent = accentPhrase.accent;
+                            });
+
+                            final accentPhrases = [
+                              ...audioItem.accentPhrases!
+                                  .sublist(0, accentPhraseIndex),
+                              nextAccentPhrase,
+                              ...audioItem.accentPhrases!
+                                  .sublist(accentPhraseIndex + 2),
+                            ];
+
+                            final nextAccentPhrases =
+                                await api.moraPitchMoraPitchPost(
+                                    speaker: audioItem.speaker,
+                                    accentPhrase: BuiltList(accentPhrases));
+                            ref.read(audioItemListProvider.notifier).update(
+                                id: audioItem.id,
+                                accentPhrases:
+                                    nextAccentPhrases.data?.toList());
                           },
                         ),
                       ),
