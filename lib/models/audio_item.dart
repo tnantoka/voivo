@@ -78,4 +78,93 @@ class AudioItem {
 
     return path;
   }
+
+  updateAccent(DefaultApi api, int accentPhraseIndex, int moraIndex,
+      int nextAccent) async {
+    final accentPhrase = accentPhrases![accentPhraseIndex];
+
+    final nextAccentPhrases = [...accentPhrases!];
+    nextAccentPhrases[accentPhraseIndex] = AccentPhrase((builder) {
+      builder.moras = ListBuilder(accentPhrase.moras);
+
+      if (accentPhrase.pauseMora != null) {
+        final pauseMora = MoraBuilder();
+        pauseMora.replace(accentPhrase.pauseMora!);
+        builder.pauseMora = pauseMora;
+      }
+
+      builder.accent = nextAccent;
+    });
+
+    final res = await api.moraPitchMoraPitchPost(
+        speaker: speaker, accentPhrase: BuiltList(nextAccentPhrases));
+    return res.data?.toList();
+  }
+
+  splitAccentPhrases(
+    DefaultApi api,
+    int accentPhraseIndex,
+    int moraIndex,
+  ) async {
+    final accentPhrase = accentPhrases![accentPhraseIndex];
+
+    final nextAccentPhrase1 = AccentPhrase((builder) {
+      builder.moras = ListBuilder(accentPhrase.moras.sublist(0, moraIndex + 1));
+      builder.accent =
+          accentPhrase.accent > moraIndex ? moraIndex + 1 : accentPhrase.accent;
+    });
+
+    final nextAccentPhrase2 = AccentPhrase((builder) {
+      builder.moras = ListBuilder(accentPhrase.moras.sublist(moraIndex + 1));
+      if (accentPhrase.pauseMora != null) {
+        final pauseMora = MoraBuilder();
+        pauseMora.replace(accentPhrase.pauseMora!);
+        builder.pauseMora = pauseMora;
+      }
+      builder.accent = accentPhrase.accent > moraIndex + 1
+          ? accentPhrase.accent - moraIndex - 1
+          : 1;
+    });
+
+    final nextAccentPhrases = [
+      ...accentPhrases!.sublist(0, accentPhraseIndex),
+      nextAccentPhrase1,
+      nextAccentPhrase2,
+      ...accentPhrases!.sublist(accentPhraseIndex + 1),
+    ];
+
+    final res = await api.moraPitchMoraPitchPost(
+        speaker: speaker, accentPhrase: BuiltList(nextAccentPhrases));
+    return res.data?.toList();
+  }
+
+  mergeAccentPhrases(
+    DefaultApi api,
+    int accentPhraseIndex,
+  ) async {
+    final accentPhrase = accentPhrases![accentPhraseIndex];
+
+    final nextAccentPhrase = AccentPhrase((builder) {
+      builder.moras = ListBuilder([
+        ...accentPhrase.moras,
+        ...accentPhrases![accentPhraseIndex + 1].moras,
+      ]);
+      if (accentPhrases![accentPhraseIndex + 1].pauseMora != null) {
+        final pauseMora = MoraBuilder();
+        pauseMora.replace(accentPhrases![accentPhraseIndex + 1].pauseMora!);
+        builder.pauseMora = pauseMora;
+      }
+      builder.accent = accentPhrase.accent;
+    });
+
+    final nextAccentPhrases = [
+      ...accentPhrases!.sublist(0, accentPhraseIndex),
+      nextAccentPhrase,
+      ...accentPhrases!.sublist(accentPhraseIndex + 2),
+    ];
+
+    final res = await api.moraPitchMoraPitchPost(
+        speaker: speaker, accentPhrase: BuiltList(nextAccentPhrases));
+    return res.data?.toList();
+  }
 }

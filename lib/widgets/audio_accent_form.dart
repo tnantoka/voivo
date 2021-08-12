@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:openapi/openapi.dart';
-import 'package:built_collection/built_collection.dart';
 
 import '../providers.dart';
 import '../models/audio_item.dart';
@@ -35,7 +33,6 @@ class AudioAccentForm extends HookConsumerWidget {
                             return MapEntry(
                               moraIndex,
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Column(
                                     children: [
@@ -43,36 +40,19 @@ class AudioAccentForm extends HookConsumerWidget {
                                         value: moraIndex + 1,
                                         groupValue: accentPhrase.accent,
                                         onChanged: (nextAccent) async {
-                                          final accentPhrases = [
-                                            ...audioItem.accentPhrases!
-                                          ];
-                                          accentPhrases[accentPhraseIndex] =
-                                              AccentPhrase((builder) {
-                                            builder.moras =
-                                                ListBuilder(accentPhrase.moras);
-                                            if (accentPhrase.pauseMora !=
-                                                null) {
-                                              final pauseMora = MoraBuilder();
-                                              pauseMora.replace(
-                                                  accentPhrase.pauseMora!);
-                                              builder.pauseMora = pauseMora;
-                                            }
-                                            builder.accent = nextAccent;
-                                          });
-
                                           final nextAccentPhrases =
-                                              await api.moraPitchMoraPitchPost(
-                                                  speaker: audioItem.speaker,
-                                                  accentPhrase:
-                                                      BuiltList(accentPhrases));
+                                              await audioItem.updateAccent(
+                                                  api,
+                                                  accentPhraseIndex,
+                                                  moraIndex,
+                                                  nextAccent!);
                                           ref
                                               .read(audioItemListProvider
                                                   .notifier)
                                               .update(
                                                   id: audioItem.id,
                                                   accentPhrases:
-                                                      nextAccentPhrases.data
-                                                          ?.toList());
+                                                      nextAccentPhrases);
                                         },
                                       ),
                                       Text(mora.text),
@@ -84,60 +64,19 @@ class AudioAccentForm extends HookConsumerWidget {
                                       height: 24,
                                       child: ElevatedButton(
                                         onPressed: () async {
-                                          final nextAccentPhrase1 =
-                                              AccentPhrase((builder) {
-                                            builder.moras = ListBuilder(
-                                                accentPhrase.moras
-                                                    .sublist(0, moraIndex + 1));
-                                            builder.accent =
-                                                accentPhrase.accent > moraIndex
-                                                    ? moraIndex + 1
-                                                    : accentPhrase.accent;
-                                          });
-
-                                          final nextAccentPhrase2 =
-                                              AccentPhrase((builder) {
-                                            builder.moras = ListBuilder(
-                                                accentPhrase.moras
-                                                    .sublist(moraIndex + 1));
-                                            if (accentPhrase.pauseMora !=
-                                                null) {
-                                              final pauseMora = MoraBuilder();
-                                              pauseMora.replace(
-                                                  accentPhrase.pauseMora!);
-                                              builder.pauseMora = pauseMora;
-                                            }
-                                            builder.accent =
-                                                accentPhrase.accent >
-                                                        moraIndex + 1
-                                                    ? accentPhrase.accent -
-                                                        moraIndex -
-                                                        1
-                                                    : 1;
-                                          });
-
-                                          final accentPhrases = [
-                                            ...audioItem.accentPhrases!
-                                                .sublist(0, accentPhraseIndex),
-                                            nextAccentPhrase1,
-                                            nextAccentPhrase2,
-                                            ...audioItem.accentPhrases!
-                                                .sublist(accentPhraseIndex + 1),
-                                          ];
-
                                           final nextAccentPhrases =
-                                              await api.moraPitchMoraPitchPost(
-                                                  speaker: audioItem.speaker,
-                                                  accentPhrase:
-                                                      BuiltList(accentPhrases));
+                                              await audioItem
+                                                  .splitAccentPhrases(
+                                                      api,
+                                                      accentPhraseIndex,
+                                                      moraIndex);
                                           ref
                                               .read(audioItemListProvider
                                                   .notifier)
                                               .update(
                                                   id: audioItem.id,
                                                   accentPhrases:
-                                                      nextAccentPhrases.data
-                                                          ?.toList());
+                                                      nextAccentPhrases);
                                         },
                                         style: ElevatedButton.styleFrom(
                                           primary: Colors.grey,
@@ -162,42 +101,11 @@ class AudioAccentForm extends HookConsumerWidget {
                             child: const Icon(Icons.close_fullscreen),
                           ),
                           onPressed: () async {
-                            final nextAccentPhrase = AccentPhrase((builder) {
-                              builder.moras = ListBuilder([
-                                ...accentPhrase.moras,
-                                ...audioItem
-                                    .accentPhrases![accentPhraseIndex + 1]
-                                    .moras,
-                              ]);
-                              if (audioItem
-                                      .accentPhrases![accentPhraseIndex + 1]
-                                      .pauseMora !=
-                                  null) {
-                                final pauseMora = MoraBuilder();
-                                pauseMora.replace(audioItem
-                                    .accentPhrases![accentPhraseIndex + 1]
-                                    .pauseMora!);
-                                builder.pauseMora = pauseMora;
-                              }
-                              builder.accent = accentPhrase.accent;
-                            });
-
-                            final accentPhrases = [
-                              ...audioItem.accentPhrases!
-                                  .sublist(0, accentPhraseIndex),
-                              nextAccentPhrase,
-                              ...audioItem.accentPhrases!
-                                  .sublist(accentPhraseIndex + 2),
-                            ];
-
-                            final nextAccentPhrases =
-                                await api.moraPitchMoraPitchPost(
-                                    speaker: audioItem.speaker,
-                                    accentPhrase: BuiltList(accentPhrases));
+                            final nextAccentPhrases = await audioItem
+                                .mergeAccentPhrases(api, accentPhraseIndex);
                             ref.read(audioItemListProvider.notifier).update(
                                 id: audioItem.id,
-                                accentPhrases:
-                                    nextAccentPhrases.data?.toList());
+                                accentPhrases: nextAccentPhrases);
                           },
                         ),
                       ),
