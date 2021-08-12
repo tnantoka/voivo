@@ -24,6 +24,7 @@ class AudioAccentForm extends HookConsumerWidget {
               return MapEntry(
                 accentPhraseIndex,
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -33,6 +34,7 @@ class AudioAccentForm extends HookConsumerWidget {
                             return MapEntry(
                               moraIndex,
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Column(
                                     children: [

@@ -12,6 +12,8 @@ class AudioGeneralForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final api = ref.watch(defaultApiProvider).state;
+
     return Container(
       margin: const EdgeInsets.only(top: 8),
       child: Column(
@@ -23,10 +25,13 @@ class AudioGeneralForm extends HookConsumerWidget {
               DropdownButton<int>(
                 value: audioItem.speaker,
                 icon: const Icon(Icons.arrow_drop_down),
-                onChanged: (nextSpeaker) {
-                  ref
-                      .read(audioItemListProvider.notifier)
-                      .update(id: audioItem.id, speacker: nextSpeaker);
+                onChanged: (nextSpeaker) async {
+                  final accentPhrases = await audioItem.fetchAccentPhrases(
+                      api, audioItem.text, nextSpeaker!);
+                  ref.read(audioItemListProvider.notifier).update(
+                      id: audioItem.id,
+                      speacker: nextSpeaker,
+                      accentPhrases: accentPhrases);
                 },
                 items: [0, 1].map((speaker) {
                   return DropdownMenuItem(

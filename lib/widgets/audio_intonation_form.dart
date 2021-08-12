@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:openapi/openapi.dart';
-import 'package:built_collection/built_collection.dart';
 
 import '../models/audio_item.dart';
 import '../providers.dart';
@@ -27,6 +25,7 @@ class AudioIntonationForm extends HookConsumerWidget {
               return MapEntry(
                 accentPhraseIndex,
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -37,6 +36,7 @@ class AudioIntonationForm extends HookConsumerWidget {
                               return MapEntry(
                                 moraIndex,
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Column(
                                       children: [
@@ -49,50 +49,12 @@ class AudioIntonationForm extends HookConsumerWidget {
                                               divisions: 35,
                                               value: mora.pitch.toDouble(),
                                               onChanged: (nextPitch) {
-                                                final nextAccentPhrases = [
-                                                  ...audioItem.accentPhrases!
-                                                ];
-                                                nextAccentPhrases[
-                                                        accentPhraseIndex] =
-                                                    AccentPhrase((builder) {
-                                                  builder.moras = ListBuilder(
-                                                      accentPhrase.moras
-                                                          .asMap()
-                                                          .map((i, mora) {
-                                                    return MapEntry(i,
-                                                        Mora((moraBuilder) {
-                                                      moraBuilder.text =
-                                                          accentPhrase
-                                                              .moras[i].text;
-                                                      moraBuilder.consonant =
-                                                          accentPhrase.moras[i]
-                                                              .consonant;
-                                                      moraBuilder.vowel =
-                                                          accentPhrase
-                                                              .moras[i].vowel;
-                                                      moraBuilder.pitch =
-                                                          i == moraIndex
-                                                              ? nextPitch
-                                                              : accentPhrase
-                                                                  .moras[i]
-                                                                  .pitch;
-                                                    }));
-                                                  }).values);
-
-                                                  if (accentPhrase.pauseMora !=
-                                                      null) {
-                                                    final pauseMora =
-                                                        MoraBuilder();
-                                                    pauseMora.replace(
-                                                        accentPhrase
-                                                            .pauseMora!);
-                                                    builder.pauseMora =
-                                                        pauseMora;
-                                                  }
-                                                  builder.accent =
-                                                      accentPhrase.accent;
-                                                });
-
+                                                final nextAccentPhrases =
+                                                    audioItem.updatePicth(
+                                                        api,
+                                                        accentPhraseIndex,
+                                                        moraIndex,
+                                                        nextPitch);
                                                 ref
                                                     .read(audioItemListProvider
                                                         .notifier)

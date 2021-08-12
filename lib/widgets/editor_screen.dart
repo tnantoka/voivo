@@ -46,10 +46,8 @@ class EditorScreen extends HookConsumerWidget {
           return;
         }
 
-        final response = await api.accentPhrasesAccentPhrasesPost(
-            text: audioItem.text, speaker: audioItem.speaker);
-        final accentPhrases = response.data!.toList();
-
+        final accentPhrases = await audioItem.fetchAccentPhrases(
+            api, audioItem.text, audioItem.speaker);
         ref
             .read(audioItemListProvider.notifier)
             .update(id: id, accentPhrases: accentPhrases);

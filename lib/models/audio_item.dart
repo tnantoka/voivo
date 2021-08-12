@@ -79,6 +79,12 @@ class AudioItem {
     return path;
   }
 
+  fetchAccentPhrases(DefaultApi api, String text, int speaker) async {
+    final res =
+        await api.accentPhrasesAccentPhrasesPost(text: text, speaker: speaker);
+    return res.data?.toList();
+  }
+
   updateAccent(DefaultApi api, int accentPhraseIndex, int moraIndex,
       int nextAccent) async {
     final accentPhrase = accentPhrases![accentPhraseIndex];
@@ -99,6 +105,33 @@ class AudioItem {
     final res = await api.moraPitchMoraPitchPost(
         speaker: speaker, accentPhrase: BuiltList(nextAccentPhrases));
     return res.data?.toList();
+  }
+
+  updatePicth(
+      DefaultApi api, int accentPhraseIndex, int moraIndex, double nextPitch) {
+    final accentPhrase = accentPhrases![accentPhraseIndex];
+
+    final nextAccentPhrases = [...accentPhrases!];
+    nextAccentPhrases[accentPhraseIndex] = AccentPhrase((builder) {
+      builder.moras = ListBuilder(accentPhrase.moras.asMap().map((i, mora) {
+        return MapEntry(i, Mora((moraBuilder) {
+          moraBuilder.text = accentPhrase.moras[i].text;
+          moraBuilder.consonant = accentPhrase.moras[i].consonant;
+          moraBuilder.vowel = accentPhrase.moras[i].vowel;
+          moraBuilder.pitch =
+              i == moraIndex ? nextPitch : accentPhrase.moras[i].pitch;
+        }));
+      }).values);
+
+      if (accentPhrase.pauseMora != null) {
+        final pauseMora = MoraBuilder();
+        pauseMora.replace(accentPhrase.pauseMora!);
+        builder.pauseMora = pauseMora;
+      }
+      builder.accent = accentPhrase.accent;
+    });
+
+    return nextAccentPhrases;
   }
 
   splitAccentPhrases(
