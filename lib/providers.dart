@@ -20,6 +20,7 @@ final audioItemListProvider =
   return AudioItemList([
     AudioItem(text: 'こんにちは'),
     AudioItem(text: 'いいお天気ですね', speaker: 1),
+    AudioItem(text: 'あ、こんにちは、いいお天気ですね。'),
   ]);
 });
 

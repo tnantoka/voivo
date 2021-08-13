@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:voivo/widgets/list_screen.dart';
 import 'package:voivo/providers.dart';
+import 'package:voivo/models/audio_item.dart';
+import 'package:voivo/models/audio_item_list.dart';
 
 void main() async {
   testWidgets('ListScreen', (WidgetTester tester) async {
@@ -12,6 +14,11 @@ void main() async {
       MaterialApp(
         home: ProviderScope(
           overrides: [
+            audioItemListProvider.overrideWithValue(
+              AudioItemList([
+                AudioItem(id: 'id-0', text: 'テストです'),
+              ]),
+            ),
             initializeApiProvider.overrideWithProvider(
                 (value) => Provider((ref) => const AsyncValue.data(null))),
             hostProvider
@@ -22,16 +29,15 @@ void main() async {
       ),
     );
 
-    expect(find.text('こんにちは'), findsOneWidget);
-    expect(find.text('いいお天気ですね'), findsOneWidget);
+    expect(find.text('テストです'), findsOneWidget);
 
-    await tester.drag(find.text('こんにちは'), const Offset(1000, 0));
+    await tester.drag(find.text('テストです'), const Offset(1000, 0));
     await tester.pumpAndSettle();
-    expect(find.text('こんにちは'), findsNothing);
+    expect(find.text('テストです'), findsNothing);
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pump();
 
-    expect(find.byType(ListTile), findsNWidgets(2));
+    expect(find.byType(ListTile), findsOneWidget);
   });
 }
