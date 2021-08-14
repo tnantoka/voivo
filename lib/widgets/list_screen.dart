@@ -74,6 +74,7 @@ class ListScreen extends HookConsumerWidget {
       body: ListView.separated(
         controller: scrollController,
         padding: const EdgeInsets.all(8),
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           final item = items[index];
@@ -94,7 +95,6 @@ class ListScreen extends HookConsumerWidget {
             ),
           );
         },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

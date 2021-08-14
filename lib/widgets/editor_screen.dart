@@ -118,56 +118,57 @@ class EditorScreen extends HookConsumerWidget {
             maintainAnimation: true,
             maintainState: true,
           ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: textController,
-                  focusNode: textFocusNode,
-                  onChanged: onChangeText,
-                  autofocus: audioItem.accentPhrases == null,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: audioItem.accentPhrases == null || isPlaying
-                        ? null
-                        : onPlay,
-                    child: const Text('再生'),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: textController,
+                    focusNode: textFocusNode,
+                    onChanged: onChangeText,
+                    autofocus: audioItem.accentPhrases == null,
                   ),
-                ),
-                ToggleButtons(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text('設定'),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: audioItem.accentPhrases == null || isPlaying
+                          ? null
+                          : onPlay,
+                      child: const Text('再生'),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text('アクセント'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text('イントネーション'),
-                    ),
-                  ],
-                  onPressed: (int index) {
-                    ref.read(_selectedTabIndexProvider).state = index;
-                  },
-                  isSelected:
-                      [0, 1, 2].map((i) => i == selectedTabIndex).toList(),
-                ),
-                if (selectedTabIndex == 0)
-                  AudioGeneralForm(audioItem: audioItem),
-                if (selectedTabIndex == 1)
-                  AudioAccentForm(audioItem: audioItem),
-                if (selectedTabIndex == 2)
-                  AudioIntonationForm(audioItem: audioItem),
-              ],
+                  ),
+                  ToggleButtons(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: const Text('設定'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: const Text('アクセント'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: const Text('イントネーション'),
+                      ),
+                    ],
+                    onPressed: (int index) {
+                      ref.read(_selectedTabIndexProvider).state = index;
+                    },
+                    isSelected:
+                        [0, 1, 2].map((i) => i == selectedTabIndex).toList(),
+                  ),
+                  if (selectedTabIndex == 0)
+                    AudioGeneralForm(audioItem: audioItem),
+                  if (selectedTabIndex == 1)
+                    AudioAccentForm(audioItem: audioItem),
+                  if (selectedTabIndex == 2)
+                    AudioIntonationForm(audioItem: audioItem),
+                ],
+              ),
             ),
           ),
         ]),
