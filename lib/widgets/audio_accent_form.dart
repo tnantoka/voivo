@@ -21,15 +21,21 @@ class AudioAccentForm extends AudioDetailBaseForm {
           (moraIndex, mora) {
             children.add(
               ListTile(
-                leading: Radio<int>(
-                  value: moraIndex + 1,
-                  groupValue: accentPhrase.accent,
-                  onChanged: (nextAccent) async {
-                    final nextAccentPhrases = await audioItem.updateAccent(
-                        api, accentPhraseIndex, moraIndex, nextAccent!);
-                    ref.read(audioItemListProvider.notifier).update(
-                        id: audioItem.id, accentPhrases: nextAccentPhrases);
-                  },
+                leading: Visibility(
+                  child: Radio<int>(
+                    value: moraIndex + 1,
+                    groupValue: accentPhrase.accent,
+                    onChanged: (nextAccent) async {
+                      final nextAccentPhrases = await audioItem.updateAccent(
+                          api, accentPhraseIndex, moraIndex, nextAccent!);
+                      ref.read(audioItemListProvider.notifier).update(
+                          id: audioItem.id, accentPhrases: nextAccentPhrases);
+                    },
+                  ),
+                  maintainAnimation: true,
+                  maintainState: true,
+                  maintainSize: true,
+                  visible: accentPhrase.moras.length > 1,
                 ),
                 title: Text(mora.text),
                 trailing: splitButton(
