@@ -24,6 +24,7 @@ dependencies:
   path_provider:
   uuid:
   share:
+  shared_preferences:
   url_launcher:
 
 dev_dependencies:

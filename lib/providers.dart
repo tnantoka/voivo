@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:openapi/openapi.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/audio_item.dart';
 import 'models/audio_item_list.dart';
@@ -14,6 +15,9 @@ final versionProvider = StateProvider<String>(
 final hostProvider = StateProvider<String>(
   (ref) => '',
 );
+final prefsProvider = StateProvider<SharedPreferences?>((ref) => null);
+
+final initializePrefsProvider = FutureProvider<void>((ref) async {});
 
 final audioItemListProvider =
     StateNotifierProvider<AudioItemList, List<AudioItem>>((ref) {
@@ -30,7 +34,9 @@ final selectedAudioIdProvider = Provider<String>((ref) {
 final initializeApiProvider =
     FutureProvider.family<void, String>((ref, host) async {
   final dio = Openapi().dio;
-  dio.options.baseUrl = apiBase(host);
+
+  final prefs = ref.watch(prefsProvider).state;
+  dio.options.baseUrl = apiBase(host, prefs);
 
   final defaultApi = Openapi(dio: dio).getDefaultApi();
 

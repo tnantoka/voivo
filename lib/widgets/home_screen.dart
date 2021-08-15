@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers.dart';
 import '../utils.dart';
@@ -13,9 +14,20 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final host = ref.watch(hostProvider).state;
+    final prefs = ref.watch(prefsProvider).state;
 
     final initializeApi = ref.watch(initializeApiProvider(host));
-    final textController = useTextEditingController(text: apiBase(host));
+    final textController = useTextEditingController();
+
+    useEffect(() {
+      SharedPreferences.getInstance().then((prefs) {
+        ref.watch(prefsProvider).state = prefs;
+      });
+    }, []);
+
+    useEffect(() {
+      textController.text = apiBase(host, prefs);
+    }, [host, prefs]);
 
     return initializeApi.when(
       data: (_) => const ListScreen(),
@@ -61,6 +73,7 @@ class HomeScreen extends HookConsumerWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       ref.read(hostProvider).state = textController.value.text;
+                      prefs?.setString('host', textController.value.text);
                     },
                     child: const Text('接続'),
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers.dart';
@@ -15,9 +16,10 @@ class ListScreen extends HookConsumerWidget {
     final items = ref.watch(audioItemListProvider);
     final version = ref.watch(versionProvider).state;
     final host = ref.watch(hostProvider).state;
+    final prefs = ref.watch(prefsProvider).state;
 
     final scrollController = useScrollController();
-    final hostController = useTextEditingController(text: apiBase(host));
+    final hostController = useTextEditingController(text: apiBase(host, prefs));
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +40,7 @@ class ListScreen extends HookConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(apiBase(host)),
+                    Text(apiBase(host, prefs)),
                     Text(version),
                   ],
                 ),
@@ -48,7 +50,7 @@ class ListScreen extends HookConsumerWidget {
               title: const Text('APIホスト変更'),
               onTap: () {
                 Navigator.pop(context);
-                _showApiHostDialog(context, ref, hostController);
+                _showApiHostDialog(context, ref, hostController, prefs);
               },
             ),
             ListTile(
@@ -110,7 +112,7 @@ class ListScreen extends HookConsumerWidget {
   }
 
   _showApiHostDialog(BuildContext context, WidgetRef ref,
-      TextEditingController textController) async {
+      TextEditingController textController, SharedPreferences? prefs) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -134,6 +136,7 @@ class ListScreen extends HookConsumerWidget {
                   // FIXME: A TextEditingController was used after being disposed.
                   Future.delayed(const Duration(milliseconds: 300)).then((_) {
                     ref.read(hostProvider).state = textController.value.text;
+                    prefs?.setString('host', textController.value.text);
                   });
                   // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                   //   ref.read(hostProvider).state = textController.value.text;
