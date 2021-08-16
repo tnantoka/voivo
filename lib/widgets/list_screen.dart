@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers.dart';
-import '../utils.dart';
 
 class ListScreen extends HookConsumerWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -16,10 +15,9 @@ class ListScreen extends HookConsumerWidget {
     final items = ref.watch(audioItemListProvider);
     final version = ref.watch(versionProvider).state;
     final host = ref.watch(hostProvider).state;
-    final prefs = ref.watch(prefsProvider).state;
 
     final scrollController = useScrollController();
-    final hostController = useTextEditingController(text: apiBase(host, prefs));
+    final textController = useTextEditingController(text: host);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +38,7 @@ class ListScreen extends HookConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(apiBase(host, prefs)),
+                    Text(host),
                     Text(version),
                   ],
                 ),
@@ -50,7 +48,7 @@ class ListScreen extends HookConsumerWidget {
               title: const Text('APIホスト変更'),
               onTap: () {
                 Navigator.pop(context);
-                _showApiHostDialog(context, ref, hostController, prefs);
+                _showApiHostDialog(context, ref, textController);
               },
             ),
             ListTile(
@@ -112,7 +110,7 @@ class ListScreen extends HookConsumerWidget {
   }
 
   _showApiHostDialog(BuildContext context, WidgetRef ref,
-      TextEditingController textController, SharedPreferences? prefs) async {
+      TextEditingController textController) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -135,8 +133,10 @@ class ListScreen extends HookConsumerWidget {
                   Navigator.pop(context);
                   // FIXME: A TextEditingController was used after being disposed.
                   Future.delayed(const Duration(milliseconds: 300)).then((_) {
-                    ref.read(hostProvider).state = textController.value.text;
-                    prefs?.setString('host', textController.value.text);
+                    SharedPreferences.getInstance().then((prefs) {
+                      prefs.setString('host', textController.value.text);
+                      ref.read(hostUpdatedAtProvider).state = DateTime.now();
+                    });
                   });
                   // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                   //   ref.read(hostProvider).state = textController.value.text;

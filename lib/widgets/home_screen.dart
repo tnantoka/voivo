@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers.dart';
-import '../utils.dart';
 import 'list_screen.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -13,21 +12,15 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final hostUpdatedAt = ref.watch(hostUpdatedAtProvider).state;
     final host = ref.watch(hostProvider).state;
-    final prefs = ref.watch(prefsProvider).state;
 
-    final initializeApi = ref.watch(initializeApiProvider(host));
+    final initializeApi = ref.watch(initializeApiProvider(hostUpdatedAt));
     final textController = useTextEditingController();
 
     useEffect(() {
-      SharedPreferences.getInstance().then((prefs) {
-        ref.watch(prefsProvider).state = prefs;
-      });
-    }, []);
-
-    useEffect(() {
-      textController.text = apiBase(host, prefs);
-    }, [host, prefs]);
+      textController.text = host;
+    }, [host]);
 
     return initializeApi.when(
       data: (_) => const ListScreen(),
@@ -72,8 +65,10 @@ class HomeScreen extends HookConsumerWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      ref.read(hostProvider).state = textController.value.text;
-                      prefs?.setString('host', textController.value.text);
+                      SharedPreferences.getInstance().then((prefs) {
+                        prefs.setString('host', textController.value.text);
+                        ref.read(hostUpdatedAtProvider).state = DateTime.now();
+                      });
                     },
                     child: const Text('接続'),
                   ),
