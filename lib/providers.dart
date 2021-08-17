@@ -26,8 +26,8 @@ final hostUpdatedAtProvider = StateProvider<DateTime>(
 final audioItemListProvider =
     StateNotifierProvider<AudioItemList, List<AudioItem>>((ref) {
   return AudioItemList([
-    AudioItem(text: 'あ、こんにちは'),
-    AudioItem(text: 'いいお天気ですね', speaker: 1),
+    AudioItem(text: 'こんにちは'),
+    AudioItem(text: 'わ、びっくりした', speaker: 1),
   ]);
 });
 
