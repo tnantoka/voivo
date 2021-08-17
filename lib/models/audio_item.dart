@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:openapi/openapi.dart';
 import 'package:uuid/uuid.dart';
@@ -55,6 +56,37 @@ class AudioItem {
         createdAt: createdAt,
         updatedAt: DateTime.now().toUtc(),
       );
+
+  Map<String, String> toJson() => {
+        'id': id,
+        'text': text,
+        'speaker': speaker.toString(),
+        'accentPhrases': json.encode((accentPhrases ?? [])
+            .map((a) => standardSerializers.serialize(a))
+            .toList()),
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'intonationScale': intonationScale.toString(),
+        'pitchScale': pitchScale.toString(),
+        'speedScale': speedScale.toString(),
+        'generatedPath': generatedPath ?? '',
+      };
+
+  AudioItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        text = json['text'],
+        speaker = int.parse(json['speaker']),
+        createdAt = DateTime.parse(json['createdAt']),
+        updatedAt = DateTime.parse(json['updatedAt']),
+        accentPhrases = (jsonDecode(json['accentPhrases']) as List<dynamic>)
+            .map((d) => standardSerializers.deserialize(d)! as AccentPhrase)
+            .toList(),
+        intonationScale = num.parse(json['intonationScale']),
+        pitchScale = num.parse(json['pitchScale']),
+        speedScale = num.parse(json['speedScale']),
+        generatedPath = json['generatedPath'].toString().isEmpty
+            ? null
+            : json['generatedPath'];
 
   AudioQuery _buildQuery() {
     return AudioQuery((builder) {

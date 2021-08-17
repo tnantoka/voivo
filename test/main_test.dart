@@ -12,7 +12,7 @@ void main() {
       MaterialApp(
         home: ProviderScope(
           overrides: [
-            initializeApiProvider.overrideWithProvider(
+            initializeProvider.overrideWithProvider(
                 (value) => Provider((ref) => const AsyncValue.loading())),
             hostProvider
                 .overrideWithValue(StateController('http://example.com')),

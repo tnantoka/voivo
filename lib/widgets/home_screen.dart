@@ -15,14 +15,14 @@ class HomeScreen extends HookConsumerWidget {
     final hostUpdatedAt = ref.watch(hostUpdatedAtProvider).state;
     final host = ref.watch(hostProvider).state;
 
-    final initializeApi = ref.watch(initializeApiProvider(hostUpdatedAt));
+    final initialize = ref.watch(initializeProvider(hostUpdatedAt));
     final textController = useTextEditingController();
 
     useEffect(() {
       textController.text = host;
     }, [host]);
 
-    return initializeApi.when(
+    return initialize.when(
       data: (_) => const ListScreen(),
       loading: () => Scaffold(
         appBar: AppBar(

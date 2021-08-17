@@ -19,7 +19,7 @@ void main() async {
                 AudioItem(id: 'id-0', text: 'テストです'),
               ]),
             ),
-            initializeApiProvider.overrideWithProvider(
+            initializeProvider.overrideWithProvider(
                 (value) => Provider((ref) => const AsyncValue.data(null))),
             hostProvider
                 .overrideWithValue(StateController('http://example.com')),
